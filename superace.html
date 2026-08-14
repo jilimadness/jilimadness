@@ -5,45 +5,66 @@
   <title>Super Ace</title>
   <style>
     body { background:#111; color:white; font-family:Arial; text-align:center; margin:0; }
-    h1 { color:gold; margin:10px; }
+    h1 { color:gold; margin:10px; font-size:22px; }
 
     /* Multiplier bar */
     .multipliers {
-      display:flex; justify-content:center; gap:15px;
-      margin:10px; font-size:18px; color:gold;
+      display:flex; justify-content:space-around;
+      margin:10px; font-size:16px; color:gold;
     }
 
-    /* Reel grid */
+    /* Reel grid - phone style */
     .grid {
       display:grid;
-      grid-template-columns: repeat(5, 100px);
-      grid-template-rows: repeat(3, 100px);
-      gap:10px;
-      justify-content:center;
-      margin:20px auto;
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: repeat(3, 80px);
+      gap:6px;
+      margin:10px auto;
+      max-width:95%;
     }
     .cell {
       background:#222;
-      border-radius:10px;
+      border-radius:8px;
       display:flex; align-items:center; justify-content:center;
     }
-    .cell img { width:80px; height:80px; }
+    .cell img { width:60px; height:60px; }
 
     /* Controls */
-    .controls {
-      margin:20px;
-    }
+    .controls { margin:15px; }
     button {
-      padding:10px 20px;
+      padding:12px 20px;
       background:#ff004f;
       border:none;
-      border-radius:5px;
+      border-radius:25px;
       color:white;
       font-weight:bold;
       cursor:pointer;
-      margin:5px;
+      margin:8px;
+      font-size:16px;
+      width:80%;
+      max-width:300px;
     }
-    #result { margin-top:15px; font-size:16px; }
+    #result { margin-top:10px; font-size:14px; }
+
+    /* Balance display */
+    #balance {
+      font-size:16px;
+      margin:10px;
+      color:lightgreen;
+    }
+
+    /* Bottom nav */
+    nav {
+      position:fixed;
+      bottom:0; left:0;
+      width:100%;
+      background:#222;
+      display:flex;
+      justify-content:space-around;
+      padding:10px 0;
+      font-size:14px;
+    }
+    nav div { color:white; }
   </style>
 </head>
 <body>
@@ -51,28 +72,33 @@
 
   <!-- Multiplier bar -->
   <div class="multipliers">
-    <div>x1</div>
-    <div>x2</div>
-    <div>x3</div>
-    <div>x5</div>
+    <div>x1</div><div>x2</div><div>x3</div><div>x5</div>
   </div>
 
+  <!-- Balance -->
+  <div id="balance">Balance: 1000</div>
+
   <!-- Reel grid -->
-  <div class="grid" id="grid">
-    <!-- 15 cells (5x3) -->
-    <!-- Filled dynamically -->
-  </div>
+  <div class="grid" id="grid"></div>
 
   <!-- Controls -->
   <div class="controls">
-    <button onclick="spin()">SPIN</button>
+    <button onclick="spin()">SPIN (Cost: 10)</button>
     <button onclick="autoSpin()">AUTOSPIN</button>
     <button onclick="goBack()">⬅ Back to Dashboard</button>
     <p id="result"></p>
   </div>
 
+  <!-- Bottom nav -->
+  <nav>
+    <div>Menu</div>
+    <div>Home</div>
+    <div>Wallet</div>
+    <div>Promo</div>
+    <div>My Account</div>
+  </nav>
+
   <script>
-    // Symbol set with images
     const symbols = [
       {name:"A", img:"ace.png"},
       {name:"K", img:"king.png"},
@@ -83,8 +109,9 @@
     ];
 
     let autoSpinActive = false;
+    let balance = 1000;
+    const spinCost = 10;
 
-    // Initialize grid
     function initGrid(){
       const grid = document.getElementById("grid");
       grid.innerHTML = "";
@@ -96,8 +123,14 @@
       }
     }
 
-    // Spin function
     function spin(){
+      if(balance < spinCost){
+        document.getElementById("result").innerText = "Not enough balance!";
+        return;
+      }
+      balance -= spinCost;
+      updateBalance();
+
       const grid = document.getElementById("grid").children;
       let scatterCount = 0;
       let aceCount = 0;
@@ -110,12 +143,15 @@
       }
 
       if(scatterCount >= 3){
-        document.getElementById("result").innerText = "✨ Scatter Bonus! Free Spins!";
+        balance += 50; // scatter win
+        document.getElementById("result").innerText = "✨ Scatter Bonus! You won 50!";
       } else if(aceCount >= 5){
-        document.getElementById("result").innerText = "🎉 JACKPOT! Multiple Aces!";
+        balance += 100; // jackpot
+        document.getElementById("result").innerText = "🎉 JACKPOT! You won 100!";
       } else {
         document.getElementById("result").innerText = "Try again!";
       }
+      updateBalance();
 
       if(autoSpinActive){
         setTimeout(spin, 1500);
@@ -129,11 +165,16 @@
       }
     }
 
+    function updateBalance(){
+      document.getElementById("balance").innerText = "Balance: " + balance;
+    }
+
     function goBack(){
       window.location.href = "dashboard.html";
     }
 
     initGrid();
+    updateBalance();
   </script>
 </body>
 </html>

@@ -63,13 +63,15 @@
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: rgba(0,0,0,0.9);
+      background: rgba(0,0,0,0.95);
       color: white;
-      text-align: center;
-      padding-top: 50px;
+      text-align: left;
+      padding: 20px;
       z-index: 9999;
+      overflow-y: auto; /* ✅ scrollable */
     }
     #popup h2 {
+      text-align: center;
       color: gold;
       text-shadow: 0 0 10px gold;
     }
@@ -82,6 +84,10 @@
       color: white;
       font-weight: bold;
       cursor: pointer;
+    }
+    #popup .buttons {
+      text-align: center;
+      margin-top: 20px;
     }
   </style>
 </head>
@@ -102,13 +108,18 @@
   <!-- Popup -->
   <div id="popup">
     <h2>Responsible Gaming Guidelines</h2>
-    <p>I am over 21 years of age.</p>
-    <p>I am not a government official or Armed Forces member.</p>
-    <p>I am not a holder of a Gaming Employment License (GEL).</p>
-    <p>Playing in open and public places is prohibited.</p>
-    <br>
-    <button onclick="closePopup()">EXIT</button>
-    <button onclick="proceed()">PROCEED</button>
+    <p>• I am over 21 years of age.</p>
+    <p>• I am not a government official, or employee connected directly with the operation of the government or any of its agencies.</p>
+    <p>• I am not a member of the Armed Forces of the Philippines, including the Army, Navy, Air Force, or the Philippine National Police.</p>
+    <p>• I am not a holder of a Gaming Employment License (GEL).</p>
+    <p>• Playing in open and public places is prohibited.</p>
+    <p>• To Self-Exclude (Self-Ban)</p>
+    <p>• To Know More About PAGCOR's Responsible Gaming Program</p>
+    <p>• For Gaming Support Helplines</p>
+    <div class="buttons">
+      <button onclick="closePopup()">EXIT</button>
+      <button onclick="proceed()">PROCEED</button>
+    </div>
   </div>
 
   <!-- Firebase SDKs -->

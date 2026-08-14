@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JiliMadness</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #4b0082, #2e0854);
+      color: white;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      padding: 30px;
+      background: rgba(0,0,0,0.4);
+    }
+    h1 {
+      font-size: 2.5em;
+      margin: 0;
+      color: gold;
+    }
+    .signup-box {
+      background: rgba(255,255,255,0.1);
+      padding: 20px;
+      margin: 30px auto;
+      width: 300px;
+      border-radius: 10px;
+    }
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 5px;
+    }
+    button {
+      background: red;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+    button:hover {
+      background: darkred;
+    }
+    #userList {
+      margin-top: 20px;
+      list-style: none;
+      padding: 0;
+    }
+    #userList li {
+      background: rgba(255,255,255,0.1);
+      margin: 5px auto;
+      padding: 10px;
+      width: 250px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>JiliMadness</h1>
+    <p>Play Anytime, Anywhere — Earn Points!</p>
+  </header>
+
+  <div class="signup-box">
+    <h2>Sign Up Now</h2>
+    <input type="text" id="username" placeholder="Enter your name">
+    <input type="text" id="phone" placeholder="+63 09XX XXX XXXX">
+    <br>
+    <button id="signupBtn">Sign Up</button>
+    <p><input type="checkbox"> I Agree To Terms & Privacy</p>
+  </div>
+
+  <h2>Registered Users</h2>
+  <ul id="userList"></ul>
+
+  <!-- Firebase SDKs -->
+  <script type="module">
+    // Import Firebase functions
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-analytics.js";
+    import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+
+    // Your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyBLAo7rx11yfA6GAdWoXhwrd3hedcZXuBc",
+      authDomain: "jilimadness.firebaseapp.com",
+      projectId: "jilimadness",
+      storageBucket: "jilimadness.firebasestorage.app",
+      messagingSenderId: "150215292013",
+      appId: "1:150215292013:web:d840af710a67776b8bbb64",
+      measurementId: "G-WCZ8NS8CVT"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getFirestore(app);
+
+    // Signup function
+    document.getElementById("signupBtn").addEventListener("click", async () => {
+      const name = document.getElementById("username").value;
+      const phone = document.getElementById("phone").value;
+
+      if (name && phone) {
+        try {
+          await addDoc(collection(db, "users"), {
+            name: name,
+            phone: phone,
+            points: 0
+          });
+          alert("Signup successful! Data saved to Firebase.");
+          loadUsers(); // refresh list after signup
+        } catch (error) {
+          console.error("Error saving data: ", error);
+          alert("Error saving data. Check console.");
+        }
+      } else {
+        alert("Please enter both name and phone.");
+      }
+    });
+
+    // Load users from Firestore
+    async function loadUsers() {
+      const list = document.getElementById("userList");
+      list.innerHTML = "";
+      const snapshot = await getDocs(collection(db, "users"));
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const li = document.createElement("li");
+        li.textContent = `${data.name} - ${data.phone} - Points: ${data.points}`;
+        list.appendChild(li);
+      });
+    }
+
+    // Load users on page start
+    loadUsers();
+  </script>
+</body>
+</html>

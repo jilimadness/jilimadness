@@ -7,14 +7,14 @@
     body {
       margin:0;
       font-family:Arial, sans-serif;
-      background-image: url("violet-bg.jpg"); /* replace with your actual uploaded filename */
+      background-image: url("IMG_5457.png"); /* ✅ violet background */
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
       color:white;
       text-align:center;
     }
-    .signup-box {
+    .box {
       margin:50px auto;
       width:300px;
       padding:20px;
@@ -34,44 +34,19 @@
       font-weight:bold;
       cursor:pointer;
     }
+    #otpSection { display:none; }
   </style>
 </head>
 <body>
   <h1>JiliMadness</h1>
   <p>Play Anytime, Anywhere — Earn Points!</p>
 
-  <div class="signup-box">
-    <h2>Sign Up Now</h2>
+  <div class="box" id="signupSection">
+    <h2>Enter Phone Number</h2>
     <input type="text" id="phone" placeholder="09XXXXXXXXX">
-    <button type="button" id="signupBtn">Sign Up</button>
-    <p><input type="checkbox"> I Agree To Terms & Privacy</p>
+    <button type="button" onclick="sendOTP()">Proceed</button>
+    <div id="recaptcha-container"></div>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
-
-    const firebaseConfig = { /* your Firebase config here */ };
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    document.getElementById("signupBtn").addEventListener("click", async () => {
-      let phone = document.getElementById("phone").value;
-
-      if (!/^09\d{9}$/.test(phone)) {
-        alert("Invalid PH number. Use 09XXXXXXXXX format.");
-        return;
-      }
-
-      try {
-        await addDoc(collection(db, "users"), { phone: phone, points: 0 });
-        localStorage.setItem("userPhone", phone);
-        window.location.href = "home.html";
-      } catch (error) {
-        console.error("Error saving data:", error);
-        alert("Error saving data. Check console.");
-      }
-    });
-  </script>
-</body>
-</html>
+  <div class="box" id="otpSection">
+    <h2>Enter OTP

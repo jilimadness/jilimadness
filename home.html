@@ -17,7 +17,6 @@
   <h1>Welcome to JiliMadness</h1>
   <p>Your dashboard starts here</p>
 
-  <!-- Popup -->
   <div id="popup">
     <h2>Responsible Gaming Guidelines</h2>
     <p>• I am over 21 years of age.</p>
@@ -52,7 +51,6 @@
     function showPopup() {
       document.getElementById("popup").style.display = "block";
     }
-
     function exitToIndex() {
       window.location.href = "index.html";
     }
@@ -65,25 +63,21 @@
         return;
       }
 
-      // ✅ Normalize PH number to +63 format
-      if (phone.startsWith("09") && phone.length === 11) {
-        phone = "+63" + phone.substring(1);
-      }
+      // Convert internally for Firebase
+      const firebasePhone = "+63" + phone.substring(1);
 
-      // Setup reCAPTCHA
-      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {});
+      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { 'size': 'invisible' });
       const appVerifier = window.recaptchaVerifier;
 
-      signInWithPhoneNumber(auth, phone, appVerifier)
+      signInWithPhoneNumber(auth, firebasePhone, appVerifier)
         .then((confirmationResult) => {
           window.confirmationResult = confirmationResult;
           alert("OTP sent to " + phone);
-          // ✅ Redirect to OTP entry page
           window.location.href = "otp.html";
         })
         .catch((error) => {
           console.error("SMS not sent", error);
-          alert("Error sending OTP. Check console.");
+          alert("Error sending OTP: " + error.message);
         });
     }
   </script>

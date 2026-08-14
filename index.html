@@ -7,7 +7,7 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background-image: url("IMG_5457.png"); /* your uploaded violet background */
+      background-image: url("IMG_5457.png"); /* violet background */
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -56,39 +56,6 @@
       transform: scale(1.05);
       box-shadow: 0 0 25px #ff66a3;
     }
-
-    /* Popup styling */
-    #popup {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.95);
-      color: white;
-      text-align: left;
-      padding: 20px;
-      z-index: 9999;
-      overflow-y: auto; /* ✅ scrollable */
-    }
-    #popup h2 {
-      text-align: center;
-      color: gold;
-      text-shadow: 0 0 10px gold;
-    }
-    #popup button {
-      margin: 10px;
-      padding: 10px 20px;
-      background: #ff004f;
-      border: none;
-      border-radius: 5px;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    #popup .buttons {
-      text-align: center;
-      margin-top: 20px;
-    }
   </style>
 </head>
 <body>
@@ -103,23 +70,6 @@
     <br>
     <button id="signupBtn">Sign Up</button>
     <p><input type="checkbox"> I Agree To Terms & Privacy</p>
-  </div>
-
-  <!-- Popup -->
-  <div id="popup">
-    <h2>Responsible Gaming Guidelines</h2>
-    <p>• I am over 21 years of age.</p>
-    <p>• I am not a government official, or employee connected directly with the operation of the government or any of its agencies.</p>
-    <p>• I am not a member of the Armed Forces of the Philippines, including the Army, Navy, Air Force, or the Philippine National Police.</p>
-    <p>• I am not a holder of a Gaming Employment License (GEL).</p>
-    <p>• Playing in open and public places is prohibited.</p>
-    <p>• To Self-Exclude (Self-Ban)</p>
-    <p>• To Know More About PAGCOR's Responsible Gaming Program</p>
-    <p>• For Gaming Support Helplines</p>
-    <div class="buttons">
-      <button onclick="closePopup()">EXIT</button>
-      <button onclick="proceed()">PROCEED</button>
-    </div>
   </div>
 
   <!-- Firebase SDKs -->
@@ -142,7 +92,7 @@
     const analytics = getAnalytics(app);
     const db = getFirestore(app);
 
-    // Signup function with PH number validation + popup
+    // Signup function with PH number validation + redirect
     document.getElementById("signupBtn").addEventListener("click", async () => {
       const phone = document.getElementById("phone").value;
 
@@ -166,22 +116,13 @@
         });
         alert("Signup successful!");
         
-        // ✅ Show popup
-        document.getElementById("popup").style.display = "block";
+        // ✅ Redirect to next page (home.html)
+        window.location.href = "home.html";
       } catch (error) {
         console.error("Error saving data: ", error);
         alert("Error saving data. Check console.");
       }
     });
-
-    // Popup functions
-    window.closePopup = function() {
-      document.getElementById("popup").style.display = "none";
-    }
-
-    window.proceed = function() {
-      window.location.href = "https://play.funalomax.com/responsible-gaming-guidelines";
-    }
   </script>
 </body>
 </html>

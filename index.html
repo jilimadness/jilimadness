@@ -4,10 +4,36 @@
   <meta charset="UTF-8">
   <title>JiliMadness</title>
   <style>
-    body { margin:0; font-family:Arial; background:#4b0082; color:white; text-align:center; }
-    .signup-box { margin:50px auto; width:300px; padding:20px; background:rgba(255,255,255,0.1); border-radius:10px; }
-    input, button { width:90%; padding:10px; margin:10px 0; border:none; border-radius:5px; }
-    button { background:#ff004f; color:white; font-weight:bold; cursor:pointer; }
+    body {
+      margin:0;
+      font-family:Arial, sans-serif;
+      background-image: url("violet-bg.jpg"); /* replace with your actual uploaded filename */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      color:white;
+      text-align:center;
+    }
+    .signup-box {
+      margin:50px auto;
+      width:300px;
+      padding:20px;
+      background:rgba(0,0,0,0.6);
+      border-radius:10px;
+    }
+    input, button {
+      width:90%;
+      padding:10px;
+      margin:10px 0;
+      border:none;
+      border-radius:5px;
+    }
+    button {
+      background:#ff004f;
+      color:white;
+      font-weight:bold;
+      cursor:pointer;
+    }
   </style>
 </head>
 <body>
@@ -25,16 +51,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
     import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBLAo7rx11yfA6GAdWoXhwrd3hedcZXuBc",
-      authDomain: "jilimadness.firebaseapp.com",
-      projectId: "jilimadness",
-      storageBucket: "jilimadness.firebasestorage.app",
-      messagingSenderId: "150215292013",
-      appId: "1:150215292013:web:d840af710a67776b8bbb64",
-      measurementId: "G-WCZ8NS8CVT"
-    };
-
+    const firebaseConfig = { /* your Firebase config here */ };
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 

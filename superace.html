@@ -28,9 +28,9 @@
 
   .grid {
     display: grid;
-    grid-template-columns: repeat(5, 100px); /* narrower cards */
+    grid-template-columns: repeat(5, 100px);
     grid-template-rows: repeat(3, 140px);
-    gap: 2px; /* very small gap so cards are close */
+    gap: 2px; /* cards close together */
     justify-content: center;
   }
   .cell {
@@ -75,11 +75,11 @@
     <div class="cell"><img src="queen.png" alt="Queen"></div>
     <div class="cell"><img src="jack.png" alt="Jack"></div>
     <div class="cell"><img src="ten.png" alt="Ten"></div>
-    <div class="cell"><img src="ace.png" alt="Ace"></div>
-    <div class="cell"><img src="king.png" alt="King"></div>
-    <div class="cell"><img src="queen.png" alt="Queen"></div>
-    <div class="cell"><img src="jack.png" alt="Jack"></div>
-    <div class="cell"><img src="ten.png" alt="Ten"></div>
+    <div class="cell"><img src="heart.png" alt="Heart"></div>
+    <div class="cell"><img src="spade.png" alt="Spade"></div>
+    <div class="cell"><img src="diamond.png" alt="Diamond"></div>
+    <div class="cell"><img src="club.png" alt="Club"></div>
+    <div class="cell"><img src="scatter.png" alt="Scatter"></div>
     <div class="cell"><img src="ace.png" alt="Ace"></div>
     <div class="cell"><img src="king.png" alt="King"></div>
     <div class="cell"><img src="queen.png" alt="Queen"></div>
@@ -90,7 +90,10 @@
   <button id="spin">SPIN</button>
 
 <script>
-const cards = ["ace.png", "king.png", "queen.png", "jack.png", "ten.png"];
+const cards = [
+  "ace.png", "king.png", "queen.png", "jack.png", "ten.png",
+  "heart.png", "spade.png", "diamond.png", "club.png", "scatter.png"
+];
 const cells = document.querySelectorAll('.cell img');
 const multipliers = ["x1", "x2", "x3", "x5"];
 let currentMultiplier = 0;

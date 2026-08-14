@@ -41,6 +41,7 @@
   <h1>JiliMadness</h1>
   <p>Play Anytime, Anywhere — Earn Points!</p>
 
+  <!-- Phone input -->
   <div class="box" id="signupSection">
     <h2>Enter Phone Number</h2>
     <input type="text" id="phone" placeholder="09XXXXXXXXX">
@@ -48,5 +49,70 @@
     <div id="recaptcha-container"></div>
   </div>
 
+  <!-- OTP input -->
   <div class="box" id="otpSection">
-    <h2>Enter OTP
+    <h2>Enter OTP</h2>
+    <input type="text" id="otp" placeholder="Enter OTP">
+    <button type="button" onclick="verifyCode()">Verify</button>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+    import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } 
+      from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+
+    // ✅ Your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyBLAo7rx11yfA6GAdWoXhwrd3hedcZXuBc",
+      authDomain: "jilimadness.firebaseapp.com",
+      projectId: "jilimadness",
+      storageBucket: "jilimadness.firebasestorage.app",
+      messagingSenderId: "150215292013",
+      appId: "1:150215292013:web:d840af710a67776b8bbb64",
+      measurementId: "G-WCZ8NS8CVT"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    window.sendOTP = function() {
+      let phone = document.getElementById("phone").value;
+
+      if (!/^09\d{9}$/.test(phone)) {
+        alert("Invalid PH number. Use 09XXXXXXXXX format.");
+        return;
+      }
+
+      // Convert internally for Firebase
+      const firebasePhone = "+63" + phone.substring(1);
+
+      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { size:'invisible' });
+      const appVerifier = window.recaptchaVerifier;
+
+      signInWithPhoneNumber(auth, firebasePhone, appVerifier)
+        .then((confirmationResult) => {
+          window.confirmationResult = confirmationResult;
+          alert("OTP sent to " + phone);
+          document.getElementById("signupSection").style.display = "none";
+          document.getElementById("otpSection").style.display = "block";
+        })
+        .catch((error) => {
+          console.error("SMS not sent", error);
+          alert("Error sending OTP: " + error.message);
+        });
+    }
+
+    window.verifyCode = function() {
+      const code = document.getElementById("otp").value;
+      window.confirmationResult.confirm(code)
+        .then((result) => {
+          alert("Phone verified successfully!");
+          window.location.href = "dashboard.html"; // ✅ goes to dashboard
+        })
+        .catch((error) => {
+          alert("Invalid code. Try again.");
+        });
+    }
+  </script>
+</body>
+</html>

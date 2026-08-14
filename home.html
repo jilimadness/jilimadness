@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JiliMadness - Home</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: white;
+      text-align: center;
+    }
+    header {
+      padding: 20px;
+      background: rgba(0,0,0,0.6);
+    }
+    h1 {
+      color: gold;
+      text-shadow: 0 0 10px gold;
+    }
+
+    /* Popup styling */
+    #popup {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.95);
+      color: white;
+      text-align: left;
+      padding: 20px;
+      z-index: 9999;
+      overflow-y: auto; /* scrollable */
+    }
+    #popup h2 {
+      text-align: center;
+      color: gold;
+      text-shadow: 0 0 10px gold;
+    }
+    #popup button {
+      margin: 10px;
+      padding: 10px 20px;
+      background: #ff004f;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #popup .buttons {
+      text-align: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body onload="showPopup()">
+  <header>
+    <h1>Welcome to JiliMadness</h1>
+    <p>Your dashboard starts here</p>
+  </header>
+
+  <!-- Popup -->
+  <div id="popup">
+    <h2>Responsible Gaming Guidelines</h2>
+    <p>• I am over 21 years of age.</p>
+    <p>• I am not a government official, or employee connected directly with the operation of the government or any of its agencies.</p>
+    <p>• I am not a member of the Armed Forces of the Philippines, including the Army, Navy, Air Force, or the Philippine National Police.</p>
+    <p>• I am not a holder of a Gaming Employment License (GEL).</p>
+    <p>• Playing in open and public places is prohibited.</p>
+    <p>• To Self-Exclude (Self-Ban)</p>
+    <p>• To Know More About PAGCOR's Responsible Gaming Program</p>
+    <p>• For Gaming Support Helplines</p>
+    <div class="buttons">
+      <button onclick="exitToIndex()">EXIT</button>
+      <button onclick="proceed()">PROCEED</button>
+    </div>
+  </div>
+
+  <script>
+    // Show popup immediately when page loads
+    function showPopup() {
+      document.getElementById("popup").style.display = "block";
+    }
+
+    // Exit goes back to index.html
+    function exitToIndex() {
+      window.location.href = "index.html";
+    }
+
+    // Proceed continues with the signed-up phone number
+    function proceed() {
+      const phone = localStorage.getItem("userPhone");
+      if (phone) {
+        // Generate a simple code tied to the phone
+        const code = "CODE-" + phone.slice(-4) + "-" + Math.floor(1000 + Math.random() * 9000);
+        alert("Your code: " + code + " (linked to " + phone + ")");
+      } else {
+        alert("No phone number found. Please sign up again.");
+        window.location.href = "index.html";
+      }
+      document.getElementById("popup").style.display = "none";
+    }
+  </script>
+</body>
+</html>

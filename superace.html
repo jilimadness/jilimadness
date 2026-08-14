@@ -63,6 +63,15 @@
       font-size:14px;
     }
     nav div { color:white; }
+
+    /* Winning highlight */
+    .win {
+      animation: glow 1s ease-in-out infinite alternate;
+    }
+    @keyframes glow {
+      from { box-shadow: 0 0 10px gold; }
+      to   { box-shadow: 0 0 25px orange; }
+    }
   </style>
 </head>
 <body>
@@ -98,6 +107,10 @@
     <div>Promo</div>
     <div>My Account</div>
   </nav>
+
+  <!-- Sounds -->
+  <audio id="winSound" src="win.mp3" preload="auto"></audio>
+  <audio id="scatterSound" src="scatter.mp3" preload="auto"></audio>
 
   <script>
     const symbols = [
@@ -135,22 +148,28 @@
       const grid = document.getElementById("grid").children;
       let scatterCount = 0;
       let aceCount = 0;
+      let winningCells = [];
 
       for(let i=0;i<grid.length;i++){
         let sym = symbols[Math.floor(Math.random()*symbols.length)];
         grid[i].innerHTML = `<img src="${sym.img}" alt="${sym.name}">`;
-        if(sym.name === "Scatter") scatterCount++;
-        if(sym.name === "A") aceCount++;
+        grid[i].classList.remove("win");
+        if(sym.name === "Scatter"){ scatterCount++; winningCells.push(grid[i]); }
+        if(sym.name === "A"){ aceCount++; winningCells.push(grid[i]); }
       }
 
       if(scatterCount >= 3){
         let win = bet * 5;
         balance += win;
         document.getElementById("result").innerText = "✨ Scatter Bonus! You won " + win + "!";
+        highlightWin(winningCells);
+        document.getElementById("scatterSound").play();
       } else if(aceCount >= 5){
         let win = bet * 10;
         balance += win;
         document.getElementById("result").innerText = "🎉 JACKPOT! You won " + win + "!";
+        highlightWin(winningCells);
+        document.getElementById("winSound").play();
       } else {
         document.getElementById("result").innerText = "Try again!";
       }
@@ -188,6 +207,13 @@
 
     function goBack(){
       window.location.href = "dashboard.html";
+    }
+
+    function highlightWin(cells){
+      cells.forEach(cell => cell.classList.add("win"));
+      setTimeout(() => {
+        cells.forEach(cell => cell.classList.remove("win"));
+      }, 2000);
     }
 
     initGrid();

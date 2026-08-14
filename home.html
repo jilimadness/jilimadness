@@ -35,16 +35,7 @@
     import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } 
       from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBLAo7rx11yfA6GAdWoXhwrd3hedcZXuBc",
-      authDomain: "jilimadness.firebaseapp.com",
-      projectId: "jilimadness",
-      storageBucket: "jilimadness.firebasestorage.app",
-      messagingSenderId: "150215292013",
-      appId: "1:150215292013:web:d840af710a67776b8bbb64",
-      measurementId: "G-WCZ8NS8CVT"
-    };
-
+    const firebaseConfig = { /* your Firebase config here */ };
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
@@ -66,7 +57,7 @@
       // Convert internally for Firebase
       const firebasePhone = "+63" + phone.substring(1);
 
-      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { 'size': 'invisible' });
+      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { size:'invisible' });
       const appVerifier = window.recaptchaVerifier;
 
       signInWithPhoneNumber(auth, firebasePhone, appVerifier)

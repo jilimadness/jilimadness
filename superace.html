@@ -4,16 +4,35 @@
   <meta charset="UTF-8">
   <title>Super Ace</title>
   <style>
-    body { background:#111; color:white; text-align:center; font-family:Arial; }
-    h1 { color:gold; margin-top:20px; }
-    .reels { display:flex; justify-content:center; margin:20px; }
-    .reel {
-      background:#222; width:100px; height:100px; margin:10px;
-      display:flex; align-items:center; justify-content:center;
-      border-radius:10px;
-      transition: transform 0.3s;
+    body { background:#111; color:white; font-family:Arial; text-align:center; margin:0; }
+    h1 { color:gold; margin:10px; }
+
+    /* Multiplier bar */
+    .multipliers {
+      display:flex; justify-content:center; gap:15px;
+      margin:10px; font-size:18px; color:gold;
     }
-    .reel img { width:80px; height:80px; }
+
+    /* Reel grid */
+    .grid {
+      display:grid;
+      grid-template-columns: repeat(5, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap:10px;
+      justify-content:center;
+      margin:20px auto;
+    }
+    .cell {
+      background:#222;
+      border-radius:10px;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .cell img { width:80px; height:80px; }
+
+    /* Controls */
+    .controls {
+      margin:20px;
+    }
     button {
       padding:10px 20px;
       background:#ff004f;
@@ -22,82 +41,99 @@
       color:white;
       font-weight:bold;
       cursor:pointer;
-      margin:10px;
+      margin:5px;
     }
-    #result { margin-top:20px; font-size:18px; }
+    #result { margin-top:15px; font-size:16px; }
   </style>
 </head>
 <body>
   <h1>♠ Super Ace ♠</h1>
-  <div class="reels">
-    <div class="reel" id="r1"><img src="ace.png" alt="Ace"></div>
-    <div class="reel" id="r2"><img src="king.png" alt="King"></div>
-    <div class="reel" id="r3"><img src="queen.png" alt="Queen"></div>
+
+  <!-- Multiplier bar -->
+  <div class="multipliers">
+    <div>x1</div>
+    <div>x2</div>
+    <div>x3</div>
+    <div>x5</div>
   </div>
-  <button onclick="spin()">SPIN</button>
-  <button onclick="goBack()">⬅ Back to Dashboard</button>
-  <p id="result"></p>
+
+  <!-- Reel grid -->
+  <div class="grid" id="grid">
+    <!-- 15 cells (5x3) -->
+    <!-- Filled dynamically -->
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <button onclick="spin()">SPIN</button>
+    <button onclick="autoSpin()">AUTOSPIN</button>
+    <button onclick="goBack()">⬅ Back to Dashboard</button>
+    <p id="result"></p>
+  </div>
 
   <script>
-    // Symbol set with image paths
+    // Symbol set with images
     const symbols = [
       {name:"A", img:"ace.png"},
       {name:"K", img:"king.png"},
       {name:"Q", img:"queen.png"},
       {name:"J", img:"jack.png"},
       {name:"10", img:"ten.png"},
-      {name:"⭐", img:"scatter.png"}
+      {name:"Scatter", img:"scatter.png"}
     ];
-    let freeSpins = 0;
 
-    function spin() {
-      if(freeSpins > 0){
-        freeSpins--;
-        runSpin(true);
-      } else {
-        runSpin(false);
+    let autoSpinActive = false;
+
+    // Initialize grid
+    function initGrid(){
+      const grid = document.getElementById("grid");
+      grid.innerHTML = "";
+      for(let i=0;i<15;i++){
+        let cell = document.createElement("div");
+        cell.className = "cell";
+        cell.innerHTML = `<img src="${symbols[0].img}" alt="${symbols[0].name}">`;
+        grid.appendChild(cell);
       }
     }
 
-    function runSpin(isFree){
-      let r1 = symbols[Math.floor(Math.random()*symbols.length)];
-      let r2 = symbols[Math.floor(Math.random()*symbols.length)];
-      let r3 = symbols[Math.floor(Math.random()*symbols.length)];
+    // Spin function
+    function spin(){
+      const grid = document.getElementById("grid").children;
+      let scatterCount = 0;
+      let aceCount = 0;
 
-      // Animate reels
-      document.getElementById("r1").style.transform = "rotateX(360deg)";
-      document.getElementById("r2").style.transform = "rotateX(360deg)";
-      document.getElementById("r3").style.transform = "rotateX(360deg)";
-      setTimeout(() => {
-        document.getElementById("r1").innerHTML = `<img src="${r1.img}" alt="${r1.name}">`;
-        document.getElementById("r2").innerHTML = `<img src="${r2.img}" alt="${r2.name}">`;
-        document.getElementById("r3").innerHTML = `<img src="${r3.img}" alt="${r3.name}">`;
-        document.getElementById("r1").style.transform = "";
-        document.getElementById("r2").style.transform = "";
-        document.getElementById("r3").style.transform = "";
-      }, 300);
+      for(let i=0;i<grid.length;i++){
+        let sym = symbols[Math.floor(Math.random()*symbols.length)];
+        grid[i].innerHTML = `<img src="${sym.img}" alt="${sym.name}">`;
+        if(sym.name === "Scatter") scatterCount++;
+        if(sym.name === "A") aceCount++;
+      }
 
-      // Check results
-      let reels = [r1.name, r2.name, r3.name];
-      let aceCount = reels.filter(r => r === "A").length;
-      let scatterCount = reels.filter(r => r === "⭐").length;
-
-      if(scatterCount >= 2){
-        freeSpins += 2;
-        document.getElementById("result").innerText = "✨ Scatter Bonus! You earned 2 Free Spins!";
-        setTimeout(spin, 1500);
-      } else if(aceCount === 3){
-        document.getElementById("result").innerText = "🎉 JACKPOT! Triple Aces!";
-      } else if(aceCount === 2){
-        document.getElementById("result").innerText = "✨ Small Win! Double Aces!";
+      if(scatterCount >= 3){
+        document.getElementById("result").innerText = "✨ Scatter Bonus! Free Spins!";
+      } else if(aceCount >= 5){
+        document.getElementById("result").innerText = "🎉 JACKPOT! Multiple Aces!";
       } else {
-        document.getElementById("result").innerText = isFree ? "Free Spin used!" : "Try again!";
+        document.getElementById("result").innerText = "Try again!";
+      }
+
+      if(autoSpinActive){
+        setTimeout(spin, 1500);
+      }
+    }
+
+    function autoSpin(){
+      autoSpinActive = !autoSpinActive;
+      if(autoSpinActive){
+        spin();
       }
     }
 
     function goBack(){
       window.location.href = "dashboard.html";
     }
+
+    initGrid();
   </script>
 </body>
 </html>

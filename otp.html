@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Verify OTP</title>
+  <style>
+    body { background:#111; color:white; text-align:center; font-family:Arial; }
+    input { font-size:2em; text-align:center; margin:10px; }
+    button { margin:20px; padding:10px 20px; background:#ff004f; border:none;
+             border-radius:5px; color:white; font-weight:bold; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <h1>Confirmation Code</h1>
+  <p>Enter the OTP sent to your registered mobile number</p>
+  <input type="text" id="otp" placeholder="Enter OTP">
+  <br>
+  <button onclick="verifyCode()">Verify</button>
+
+  <script type="module">
+    import { getAuth } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+    const auth = getAuth();
+
+    window.verifyCode = function() {
+      const code = document.getElementById("otp").value;
+      window.confirmationResult.confirm(code)
+        .then((result) => {
+          alert("Phone verified successfully!");
+          window.location.href = "dashboard.html"; // your main page
+        })
+        .catch((error) => {
+          alert("Invalid code. Try again.");
+        });
+    }
+  </script>
+</body>
+</html>

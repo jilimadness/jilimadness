@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Super Ace</title>
   <style>
-    body { background:#111; color:white; font-family:Arial; text-align:center; margin:0; }
+    body { background:#000; color:white; font-family:Arial; text-align:center; margin:0; }
     h1 { color:gold; margin:10px; font-size:22px; }
 
     /* Multiplier bar */
@@ -13,21 +13,26 @@
       margin:10px; font-size:16px; color:gold;
     }
 
-    /* Reel grid - phone style */
+    /* Reel grid */
     .grid {
       display:grid;
       grid-template-columns: repeat(5, 1fr);
-      grid-template-rows: repeat(3, 80px);
+      grid-template-rows: repeat(3, 90px);
       gap:6px;
       margin:10px auto;
       max-width:95%;
     }
     .cell {
-      background:#222;
+      background:#111;
       border-radius:8px;
       display:flex; align-items:center; justify-content:center;
+      box-shadow:0 0 5px #333 inset;
     }
-    .cell img { width:60px; height:60px; }
+    .cell img { width:70px; height:70px; }
+
+    /* Balance + bet */
+    #balance { font-size:16px; margin:10px; color:lightgreen; }
+    #bet { font-size:16px; margin:10px; color:cyan; }
 
     /* Controls */
     .controls { margin:15px; }
@@ -46,13 +51,6 @@
     }
     #result { margin-top:10px; font-size:14px; }
 
-    /* Balance display */
-    #balance {
-      font-size:16px;
-      margin:10px;
-      color:lightgreen;
-    }
-
     /* Bottom nav */
     nav {
       position:fixed;
@@ -70,21 +68,24 @@
 <body>
   <h1>♠ Super Ace ♠</h1>
 
-  <!-- Multiplier bar -->
+  <!-- Multipliers -->
   <div class="multipliers">
     <div>x1</div><div>x2</div><div>x3</div><div>x5</div>
   </div>
 
-  <!-- Balance -->
+  <!-- Balance + Bet -->
   <div id="balance">Balance: 1000</div>
+  <div id="bet">Bet: 10</div>
 
   <!-- Reel grid -->
   <div class="grid" id="grid"></div>
 
   <!-- Controls -->
   <div class="controls">
-    <button onclick="spin()">SPIN (Cost: 10)</button>
+    <button onclick="spin()">SPIN</button>
     <button onclick="autoSpin()">AUTOSPIN</button>
+    <button onclick="increaseBet()">Increase Bet</button>
+    <button onclick="decreaseBet()">Decrease Bet</button>
     <button onclick="goBack()">⬅ Back to Dashboard</button>
     <p id="result"></p>
   </div>
@@ -110,7 +111,7 @@
 
     let autoSpinActive = false;
     let balance = 1000;
-    const spinCost = 10;
+    let bet = 10;
 
     function initGrid(){
       const grid = document.getElementById("grid");
@@ -124,11 +125,11 @@
     }
 
     function spin(){
-      if(balance < spinCost){
+      if(balance < bet){
         document.getElementById("result").innerText = "Not enough balance!";
         return;
       }
-      balance -= spinCost;
+      balance -= bet;
       updateBalance();
 
       const grid = document.getElementById("grid").children;
@@ -143,11 +144,13 @@
       }
 
       if(scatterCount >= 3){
-        balance += 50; // scatter win
-        document.getElementById("result").innerText = "✨ Scatter Bonus! You won 50!";
+        let win = bet * 5;
+        balance += win;
+        document.getElementById("result").innerText = "✨ Scatter Bonus! You won " + win + "!";
       } else if(aceCount >= 5){
-        balance += 100; // jackpot
-        document.getElementById("result").innerText = "🎉 JACKPOT! You won 100!";
+        let win = bet * 10;
+        balance += win;
+        document.getElementById("result").innerText = "🎉 JACKPOT! You won " + win + "!";
       } else {
         document.getElementById("result").innerText = "Try again!";
       }
@@ -165,8 +168,22 @@
       }
     }
 
+    function increaseBet(){
+      bet += 10;
+      updateBet();
+    }
+
+    function decreaseBet(){
+      if(bet > 10) bet -= 10;
+      updateBet();
+    }
+
     function updateBalance(){
       document.getElementById("balance").innerText = "Balance: " + balance;
+    }
+
+    function updateBet(){
+      document.getElementById("bet").innerText = "Bet: " + bet;
     }
 
     function goBack(){
@@ -175,6 +192,7 @@
 
     initGrid();
     updateBalance();
+    updateBet();
   </script>
 </body>
 </html>

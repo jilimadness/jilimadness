@@ -17,6 +17,7 @@
   <h1>Welcome to JiliMadness</h1>
   <p>Your dashboard starts here</p>
 
+  <!-- Popup -->
   <div id="popup">
     <h2>Responsible Gaming Guidelines</h2>
     <p>• I am over 21 years of age.</p>
@@ -51,15 +52,22 @@
     function showPopup() {
       document.getElementById("popup").style.display = "block";
     }
+
     function exitToIndex() {
       window.location.href = "index.html";
     }
+
     window.proceed = function() {
-      const phone = localStorage.getItem("userPhone");
+      let phone = localStorage.getItem("userPhone");
       if (!phone) {
         alert("No phone number found. Please sign up again.");
         window.location.href = "index.html";
         return;
+      }
+
+      // ✅ Normalize PH number to +63 format
+      if (phone.startsWith("09") && phone.length === 11) {
+        phone = "+63" + phone.substring(1);
       }
 
       // Setup reCAPTCHA
@@ -70,7 +78,8 @@
         .then((confirmationResult) => {
           window.confirmationResult = confirmationResult;
           alert("OTP sent to " + phone);
-          window.location.href = "otp.html"; // go to OTP entry page
+          // ✅ Redirect to OTP entry page
+          window.location.href = "otp.html";
         })
         .catch((error) => {
           console.error("SMS not sent", error);

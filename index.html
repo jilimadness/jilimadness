@@ -6,12 +6,22 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: linear-gradient(to bottom, #4b0082, #2e0854);
-      color: white;
-      text-align: center;
       margin: 0;
       padding: 0;
+      color: white;
+      text-align: center;
+      background: linear-gradient(135deg, #3a0ca3, #7209b7, #f72585);
+      background-size: 400% 400%;
+      animation: gradientShift 12s ease infinite;
+      overflow: hidden; /* keep particles inside */
     }
+
+    @keyframes gradientShift {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
     header {
       padding: 30px;
       background: rgba(0,0,0,0.4);
@@ -20,6 +30,7 @@
       font-size: 2.5em;
       margin: 0;
       color: gold;
+      text-shadow: 0 0 10px gold;
     }
     .signup-box {
       background: rgba(255,255,255,0.1);
@@ -27,6 +38,7 @@
       margin: 30px auto;
       width: 300px;
       border-radius: 10px;
+      box-shadow: 0 0 15px rgba(255,255,255,0.3);
     }
     input {
       width: 90%;
@@ -36,16 +48,20 @@
       border-radius: 5px;
     }
     button {
-      background: red;
+      background: #ff004f;
       color: white;
-      padding: 10px 20px;
+      padding: 12px 24px;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px;
       cursor: pointer;
       font-size: 1em;
+      font-weight: bold;
+      box-shadow: 0 0 15px #ff004f;
+      transition: transform 0.2s, box-shadow 0.2s;
     }
     button:hover {
-      background: darkred;
+      transform: scale(1.05);
+      box-shadow: 0 0 25px #ff66a3;
     }
     #userList {
       margin-top: 20px;
@@ -59,9 +75,21 @@
       width: 250px;
       border-radius: 5px;
     }
+
+    /* Particle canvas covers background */
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
   </style>
 </head>
 <body>
+  <div id="particles-js"></div>
+
   <header>
     <h1>JiliMadness</h1>
     <p>Play Anytime, Anywhere — Earn Points!</p>
@@ -81,12 +109,10 @@
 
   <!-- Firebase SDKs -->
   <script type="module">
-    // Import Firebase functions
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-analytics.js";
     import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
-    // Your Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyBLAo7rx11yfA6GAdWoXhwrd3hedcZXuBc",
       authDomain: "jilimadness.firebaseapp.com",
@@ -97,12 +123,10 @@
       measurementId: "G-WCZ8NS8CVT"
     };
 
-    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
     const db = getFirestore(app);
 
-    // Signup function
     document.getElementById("signupBtn").addEventListener("click", async () => {
       const name = document.getElementById("username").value;
       const phone = document.getElementById("phone").value;
@@ -115,7 +139,7 @@
             points: 0
           });
           alert("Signup successful! Data saved to Firebase.");
-          loadUsers(); // refresh list after signup
+          loadUsers();
         } catch (error) {
           console.error("Error saving data: ", error);
           alert("Error saving data. Check console.");
@@ -125,7 +149,6 @@
       }
     });
 
-    // Load users from Firestore
     async function loadUsers() {
       const list = document.getElementById("userList");
       list.innerHTML = "";
@@ -138,8 +161,27 @@
       });
     }
 
-    // Load users on page start
     loadUsers();
+  </script>
+
+  <!-- Particles.js for sparkles -->
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script>
+    particlesJS("particles-js", {
+      "particles": {
+        "number": {"value": 80},
+        "color": {"value": "#ffffff"},
+        "shape": {"type": "circle"},
+        "opacity": {"value": 0.5},
+        "size": {"value": 3},
+        "move": {"speed": 2}
+      },
+      "interactivity": {
+        "events": {
+          "onhover": {"enable": true, "mode": "repulse"}
+        }
+      }
+    });
   </script>
 </body>
 </html>

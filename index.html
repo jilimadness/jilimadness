@@ -7,7 +7,7 @@
     body {
       margin:0;
       font-family:Arial, sans-serif;
-      background-image: url("IMG_5457.png"); /* ✅ violet background */
+      background-image: url("IMG_5457.png"); /* violet background */
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -34,31 +34,23 @@
       font-weight:bold;
       cursor:pointer;
     }
-    #otpSection { display:none; }
   </style>
 </head>
 <body>
   <h1>JiliMadness</h1>
   <p>Play Anytime, Anywhere — Earn Points!</p>
 
-  <!-- Phone input -->
-  <div class="box" id="signupSection">
-    <h2>Enter Phone Number</h2>
-    <input type="text" id="phone" placeholder="09XXXXXXXXX">
-    <button type="button" onclick="sendOTP()">Proceed</button>
-    <div id="recaptcha-container"></div>
-  </div>
-
-  <!-- OTP input -->
-  <div class="box" id="otpSection">
-    <h2>Enter OTP</h2>
-    <input type="text" id="otp" placeholder="Enter OTP">
-    <button type="button" onclick="verifyCode()">Verify</button>
+  <div class="box">
+    <h2>Sign Up / Login</h2>
+    <input type="text" id="username" placeholder="Enter Username">
+    <input type="password" id="password" placeholder="Enter Password">
+    <button onclick="signup()">Sign Up</button>
+    <button onclick="login()">Login</button>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
-    import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } 
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } 
       from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
 
     // ✅ Your Firebase config
@@ -75,42 +67,35 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    window.sendOTP = function() {
-      let phone = document.getElementById("phone").value;
+    function formatUsername(username) {
+      return username + "@jilimadness.local"; // fake domain
+    }
 
-      if (!/^09\d{9}$/.test(phone)) {
-        alert("Invalid PH number. Use 09XXXXXXXXX format.");
-        return;
-      }
+    window.signup = function() {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
 
-      // Convert internally for Firebase
-      const firebasePhone = "+63" + phone.substring(1);
-
-      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { size:'invisible' });
-      const appVerifier = window.recaptchaVerifier;
-
-      signInWithPhoneNumber(auth, firebasePhone, appVerifier)
-        .then((confirmationResult) => {
-          window.confirmationResult = confirmationResult;
-          alert("OTP sent to " + phone);
-          document.getElementById("signupSection").style.display = "none";
-          document.getElementById("otpSection").style.display = "block";
+      createUserWithEmailAndPassword(auth, formatUsername(username), password)
+        .then((userCredential) => {
+          alert("Account created successfully!");
+          window.location.href = "dashboard.html";
         })
         .catch((error) => {
-          console.error("SMS not sent", error);
-          alert("Error sending OTP: " + error.message);
+          alert("Error: " + error.message);
         });
     }
 
-    window.verifyCode = function() {
-      const code = document.getElementById("otp").value;
-      window.confirmationResult.confirm(code)
-        .then((result) => {
-          alert("Phone verified successfully!");
-          window.location.href = "dashboard.html"; // ✅ goes to dashboard
+    window.login = function() {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+
+      signInWithEmailAndPassword(auth, formatUsername(username), password)
+        .then((userCredential) => {
+          alert("Login successful!");
+          window.location.href = "dashboard.html";
         })
         .catch((error) => {
-          alert("Invalid code. Try again.");
+          alert("Error: " + error.message);
         });
     }
   </script>

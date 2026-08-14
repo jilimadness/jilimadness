@@ -30,7 +30,7 @@
     display: grid;
     grid-template-columns: repeat(5, 100px);
     grid-template-rows: repeat(3, 140px);
-    gap: 2px; /* cards close together */
+    gap: 2px;
     justify-content: center;
   }
   .cell {
@@ -78,22 +78,22 @@
   </div>
 
   <div class="grid" id="slotGrid">
-    <!-- 15 cells (5x3 grid) -->
-    <div class="cell"><img src="ace.png" alt="Ace"></div>
-    <div class="cell"><img src="king.png" alt="King"></div>
-    <div class="cell"><img src="queen.png" alt="Queen"></div>
-    <div class="cell"><img src="jack.png" alt="Jack"></div>
-    <div class="cell"><img src="ten.png" alt="Ten"></div>
-    <div class="cell"><img src="heart.png" alt="Heart"></div>
-    <div class="cell"><img src="spade.png" alt="Spade"></div>
-    <div class="cell"><img src="diamond.png" alt="Diamond"></div>
-    <div class="cell"><img src="club.png" alt="Club"></div>
-    <div class="cell"><img src="scatter.png" alt="Scatter"></div>
-    <div class="cell"><img src="ace.png" alt="Ace"></div>
-    <div class="cell"><img src="king.png" alt="King"></div>
-    <div class="cell"><img src="queen.png" alt="Queen"></div>
-    <div class="cell"><img src="jack.png" alt="Jack"></div>
-    <div class="cell"><img src="ten.png" alt="Ten"></div>
+    <!-- 15 empty cells -->
+    <div class="cell"><img src="" alt=""></div>
+    <div class="cell"><img src="" alt=""></div>
+    <div class="cell"><img src="" alt=""></div>
+    <div class="cell"><img src="" alt=""></div>
+    <div class="cell"><img src="" alt=""></div>
+    <div class="cell"><img src="" alt=""></div>
+    <div class="cell"><img src="" alt=""></div>
+    <div class="cell"><img src="" alt=""></div>
+    <div class="cell"><img src="" alt=""></div>
+    <div class="cell"><img src="" alt=""></div>
+    <div class="cell"><img src="" alt=""></div>
+    <div class="cell"><img src="" alt=""></div>
+    <div class="cell"><img src="" alt=""></div>
+    <div class="cell"><img src="" alt=""></div>
+    <div class="cell"><img src="" alt=""></div>
   </div>
 
   <button id="spin">SPIN</button>
@@ -107,6 +107,7 @@ const cards = [
 const cells = document.querySelectorAll('.cell img');
 const multipliers = ["x1", "x2", "x3", "x5"];
 let currentMultiplier = 0;
+let freeSpins = 0;
 
 function spinGrid() {
   let scatterCount = 0;
@@ -116,16 +117,19 @@ function spinGrid() {
     setTimeout(() => {
       const randomCard = cards[Math.floor(Math.random() * cards.length)];
       img.src = randomCard;
+      img.alt = randomCard.replace(".png", "");
       img.style.transform = 'translateY(0)';
 
       if (randomCard === "scatter.png") {
         scatterCount++;
       }
 
-      // After last cell finishes, check scatter bonus
+      // After last cell finishes
       if (i === cells.length - 1) {
         if (scatterCount >= 3) {
           document.getElementById("bonus").style.display = "block";
+          freeSpins = 5; // give 5 free spins
+          runFreeSpins();
         } else {
           document.getElementById("bonus").style.display = "none";
         }
@@ -139,7 +143,20 @@ function spinGrid() {
   document.getElementById(multipliers[currentMultiplier]).classList.add('active');
 }
 
+function runFreeSpins() {
+  if (freeSpins > 0) {
+    freeSpins--;
+    setTimeout(() => {
+      spinGrid();
+      runFreeSpins();
+    }, 1500); // delay between auto spins
+  }
+}
+
 document.getElementById('spin').addEventListener('click', spinGrid);
+
+// Fill grid initially
+spinGrid();
 </script>
 </body>
 </html>

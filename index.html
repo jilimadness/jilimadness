@@ -115,8 +115,11 @@
           points: 0
         });
         alert("Signup successful!");
-        
-        // ✅ Redirect to next page (home.html)
+
+        // ✅ Save phone for later use
+        localStorage.setItem("userPhone", phone);
+
+        // ✅ Redirect to next page
         window.location.href = "home.html";
       } catch (error) {
         console.error("Error saving data: ", error);

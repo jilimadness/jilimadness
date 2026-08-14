@@ -21,37 +21,36 @@
     font-size: 28px;
     font-weight: bold;
   }
-
   .active {
     color: #ffdf00;
     text-shadow: 0 0 10px gold;
   }
 
-  .slot {
-    display: flex;
-    gap: 10px;
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(5, 100px); /* narrower cards */
+    grid-template-rows: repeat(3, 140px);
+    gap: 2px; /* very small gap so cards are close */
     justify-content: center;
   }
-
-  .reel {
-    width: 120px;
-    height: 160px;
-    border: 3px solid gold;
-    border-radius: 10px;
-    overflow: hidden;
+  .cell {
+    border: 2px solid gold;
+    border-radius: 6px;
     background: #fff;
-    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
   }
-
-  .reel img {
+  .cell img {
     width: 100%;
-    position: absolute;
-    top: 0;
-    transition: top 0.3s ease-out;
+    height: auto;
+    transform: translateY(-200%);
+    transition: transform 0.6s ease-out;
   }
 
   button {
-    margin-top: 40px;
+    margin-top: 20px;
     padding: 10px 20px;
     font-size: 18px;
     background: gold;
@@ -69,30 +68,41 @@
     <span id="x5">x5</span>
   </div>
 
-  <div class="slot">
-    <div class="reel"><img src="ace.png" alt="Ace"></div>
-    <div class="reel"><img src="king.png" alt="King"></div>
-    <div class="reel"><img src="queen.png" alt="Queen"></div>
-    <div class="reel"><img src="jack.png" alt="Jack"></div>
-    <div class="reel"><img src="ten.png" alt="Ten"></div>
+  <div class="grid" id="slotGrid">
+    <!-- 15 cells (5x3 grid) -->
+    <div class="cell"><img src="ace.png" alt="Ace"></div>
+    <div class="cell"><img src="king.png" alt="King"></div>
+    <div class="cell"><img src="queen.png" alt="Queen"></div>
+    <div class="cell"><img src="jack.png" alt="Jack"></div>
+    <div class="cell"><img src="ten.png" alt="Ten"></div>
+    <div class="cell"><img src="ace.png" alt="Ace"></div>
+    <div class="cell"><img src="king.png" alt="King"></div>
+    <div class="cell"><img src="queen.png" alt="Queen"></div>
+    <div class="cell"><img src="jack.png" alt="Jack"></div>
+    <div class="cell"><img src="ten.png" alt="Ten"></div>
+    <div class="cell"><img src="ace.png" alt="Ace"></div>
+    <div class="cell"><img src="king.png" alt="King"></div>
+    <div class="cell"><img src="queen.png" alt="Queen"></div>
+    <div class="cell"><img src="jack.png" alt="Jack"></div>
+    <div class="cell"><img src="ten.png" alt="Ten"></div>
   </div>
 
   <button id="spin">SPIN</button>
 
 <script>
 const cards = ["ace.png", "king.png", "queen.png", "jack.png", "ten.png"];
-const reels = document.querySelectorAll('.reel img');
+const cells = document.querySelectorAll('.cell img');
 const multipliers = ["x1", "x2", "x3", "x5"];
 let currentMultiplier = 0;
 
-function spinReels() {
-  reels.forEach((img, i) => {
-    img.style.top = '-400px';
+function spinGrid() {
+  cells.forEach((img, i) => {
+    img.style.transform = 'translateY(-200%)';
     setTimeout(() => {
       const randomCard = cards[Math.floor(Math.random() * cards.length)];
       img.src = randomCard;
-      img.style.top = '0';
-    }, 500 + i * 200);
+      img.style.transform = 'translateY(0)';
+    }, 300 + i * 50);
   });
 
   // Animate multiplier
@@ -101,7 +111,7 @@ function spinReels() {
   document.getElementById(multipliers[currentMultiplier]).classList.add('active');
 }
 
-document.getElementById('spin').addEventListener('click', spinReels);
+document.getElementById('spin').addEventListener('click', spinGrid);
 </script>
 </body>
 </html>

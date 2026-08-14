@@ -2,11 +2,59 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Dashboard</title>
+  <title>JiliMadness Dashboard</title>
   <style>
-    body { background:#111; color:white; text-align:center; font-family:Arial; }
+    body { margin:0; font-family:Arial, sans-serif; background:#111; color:white; }
 
-    /* Fullscreen popup overlay */
+    /* Header */
+    header {
+      background:#c00;
+      padding:10px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      color:white;
+    }
+    header h1 { margin:0; font-size:20px; }
+    header button { background:#ff004f; border:none; padding:5px 10px; color:white; border-radius:5px; }
+    header span { font-size:20px; }
+
+    /* Section titles */
+    h2 { margin:15px; font-size:18px; color:gold; }
+
+    /* Game grid */
+    .games {
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+    }
+    .game {
+      background:#222;
+      margin:10px;
+      padding:10px;
+      width:120px;
+      border-radius:10px;
+      text-align:center;
+    }
+    .game img {
+      width:100%;
+      border-radius:8px;
+    }
+    .game p { margin:5px 0; font-size:14px; }
+
+    /* Bottom nav */
+    nav {
+      position:fixed;
+      bottom:0; left:0;
+      width:100%;
+      background:#222;
+      display:flex;
+      justify-content:space-around;
+      padding:10px 0;
+    }
+    nav div { color:white; font-size:14px; }
+
+    /* Popup */
     #popup {
       display:none;
       position:fixed;
@@ -18,16 +66,9 @@
       z-index:9999;
       overflow-y:auto;
     }
-
     #popup h2 { color:gold; text-align:center; margin-bottom:20px; }
-
     #popup p { margin:10px 0; font-size:16px; line-height:1.4; }
-
-    #popup .buttons {
-      margin-top:20px;
-      text-align:center;
-    }
-
+    #popup .buttons { margin-top:20px; text-align:center; }
     #popup button {
       margin:10px;
       padding:10px 20px;
@@ -41,10 +82,15 @@
   </style>
 </head>
 <body onload="showPopup()">
-  <h1>Welcome to JiliMadness Dashboard</h1>
-  <p>Your games and points will appear here.</p>
 
-  <!-- Popup -->
+  <!-- Header -->
+  <header>
+    <h1>JiliMadness</h1>
+    <button>Login / Sign Up</button>
+    <span>🎧</span>
+  </header>
+
+  <!-- Popup Guidelines -->
   <div id="popup">
     <h2>Responsible Gaming Guidelines</h2>
     <p>• I am over 21 years of age.</p>
@@ -55,19 +101,49 @@
     <p>• To Self‑Exclude (Self‑Ban)</p>
     <p>• To Know More About PAGCOR's Responsible Gaming Program</p>
     <p>• For Gaming Support Helplines</p>
-
-    <!-- PAGCOR footer -->
     <hr style="margin:20px 0; border:1px solid #555;">
     <p style="font-size:14px; color:#ccc;">
       <strong>PAGCOR Notice:</strong><br>
       Funds or credits in the account of a player who is found ineligible to play shall mean forfeiture of said funds/credits in favor of the Government.
     </p>
-
     <div class="buttons">
       <button onclick="exitToIndex()">EXIT</button>
       <button onclick="proceed()">PROCEED</button>
     </div>
   </div>
+
+  <!-- Recommendation Section -->
+  <h2>Recommendation</h2>
+  <div class="games">
+    <div class="game"><img src="game1.png"><p>3 Pots of Gold</p></div>
+    <div class="game"><img src="game2.png"><p>Super Ace</p></div>
+    <div class="game"><img src="game3.png"><p>Cash Fiesta</p></div>
+    <div class="game"><img src="game4.png"><p>Sugar Bang Bang</p></div>
+  </div>
+
+  <!-- New Games Section -->
+  <h2>New Games</h2>
+  <div class="games">
+    <div class="game"><img src="game5.png"><p>Slice Go</p></div>
+    <div class="game"><img src="game6.png"><p>Sugar Rush!!</p></div>
+    <div class="game"><img src="game7.png"><p>Jelly Express</p></div>
+  </div>
+
+  <!-- Casino Section -->
+  <h2>Casino</h2>
+  <div class="games">
+    <div class="game"><img src="game8.png"><p>Classic Slots</p></div>
+    <div class="game"><img src="game9.png"><p>Luxor Shadow</p></div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav>
+    <div>Menu</div>
+    <div>Home</div>
+    <div>Wallet</div>
+    <div>Promo</div>
+    <div>My Account</div>
+  </nav>
 
   <script>
     function showPopup() {
@@ -78,7 +154,6 @@
     }
     function proceed() {
       document.getElementById("popup").style.display = "none";
-      alert("Welcome to your dashboard!");
     }
   </script>
 </body>

@@ -4,78 +4,25 @@
   <meta charset="UTF-8">
   <title>JiliMadness</title>
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-image: url("IMG_5457.png"); /* violet background */
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      color: white;
-      text-align: center;
-    }
-
-    header {
-      padding: 30px;
-      background: rgba(0,0,0,0.4);
-    }
-    h1 {
-      font-size: 2.5em;
-      margin: 0;
-      color: gold;
-      text-shadow: 0 0 10px gold;
-    }
-    .signup-box {
-      background: rgba(255,255,255,0.1);
-      padding: 20px;
-      margin: 30px auto;
-      width: 300px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(255,255,255,0.3);
-    }
-    input {
-      width: 90%;
-      padding: 10px;
-      margin: 10px 0;
-      border: none;
-      border-radius: 5px;
-    }
-    button {
-      background: #ff004f;
-      color: white;
-      padding: 12px 24px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 1em;
-      font-weight: bold;
-      box-shadow: 0 0 15px #ff004f;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 25px #ff66a3;
-    }
+    body { margin:0; font-family:Arial; background:#4b0082; color:white; text-align:center; }
+    .signup-box { margin:50px auto; width:300px; padding:20px; background:rgba(255,255,255,0.1); border-radius:10px; }
+    input, button { width:90%; padding:10px; margin:10px 0; border:none; border-radius:5px; }
+    button { background:#ff004f; color:white; font-weight:bold; cursor:pointer; }
   </style>
 </head>
 <body>
-  <header>
-    <h1>JiliMadness</h1>
-    <p>Play Anytime, Anywhere — Earn Points!</p>
-  </header>
+  <h1>JiliMadness</h1>
+  <p>Play Anytime, Anywhere — Earn Points!</p>
 
   <div class="signup-box">
     <h2>Sign Up Now</h2>
-    <input type="text" id="phone" placeholder="+63 09XX XXX XXXX">
-    <br>
-    <button id="signupBtn">Sign Up</button>
+    <input type="text" id="phone" placeholder="09XXXXXXXXX">
+    <button type="button" id="signupBtn">Sign Up</button>
     <p><input type="checkbox"> I Agree To Terms & Privacy</p>
   </div>
 
-  <!-- Firebase SDKs -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-analytics.js";
     import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -89,40 +36,22 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
     const db = getFirestore(app);
 
-    // Signup function with PH number validation + redirect
     document.getElementById("signupBtn").addEventListener("click", async () => {
-      const phone = document.getElementById("phone").value;
+      let phone = document.getElementById("phone").value;
 
-      // Regex: must start with 09 and have 11 digits
-      const phRegex = /^09\d{9}$/;
-
-      if (!phone) {
-        alert("Please enter your phone number.");
-        return;
-      }
-
-      if (!phRegex.test(phone)) {
-        alert("Invalid PH number");
+      if (!/^09\d{9}$/.test(phone)) {
+        alert("Invalid PH number. Use 09XXXXXXXXX format.");
         return;
       }
 
       try {
-        await addDoc(collection(db, "users"), {
-          phone: phone,
-          points: 0
-        });
-        alert("Signup successful!");
-
-        // ✅ Save phone for later use
+        await addDoc(collection(db, "users"), { phone: phone, points: 0 });
         localStorage.setItem("userPhone", phone);
-
-        // ✅ Redirect to next page
         window.location.href = "home.html";
       } catch (error) {
-        console.error("Error saving data: ", error);
+        console.error("Error saving data:", error);
         alert("Error saving data. Check console.");
       }
     });

@@ -90,20 +90,23 @@
 
     .controls {
       margin-top: 15px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
     }
 
-    .spin-btn {
+    .spin-btn, .turbo-btn {
       background: gold;
       color: black;
       border: none;
       border-radius: 50%;
       padding: 20px;
-      font-size: 1.5em;
+      font-size: 1.2em;
       cursor: pointer;
       box-shadow: 0 0 20px yellow;
     }
 
-    .spin-btn:hover {
+    .spin-btn:hover, .turbo-btn:hover {
       background: orange;
     }
 
@@ -137,9 +140,11 @@
 
     <div class="controls">
       <button class="spin-btn" onclick="spin()">SPIN</button>
-      <div class="stats">
-        <p>Bet: 2 | Balance: 2000 | Win: 0</p>
-      </div>
+      <button class="turbo-btn" onclick="turboSpin()">TURBO</button>
+    </div>
+
+    <div class="stats">
+      <p id="statsText">Bet: 2 | Balance: 2000 | Win: 0</p>
     </div>
   </div>
 
@@ -147,8 +152,12 @@
     const symbols = ["A", "K", "Q", "J", "♠", "♥", "♦", "♣", "SCATTER", "WILD"];
     const grid = document.getElementById("grid");
     const comboMessage = document.getElementById("comboMessage");
+    const statsText = document.getElementById("statsText");
 
-    function spin() {
+    let balance = 2000;
+    const bet = 2;
+
+    function spin(useTurbo = false) {
       grid.innerHTML = "";
       comboMessage.textContent = "";
 
@@ -156,11 +165,13 @@
       let wildHit = false;
       let comboCount = 1;
       let lastSymbol = null;
+      let win = 0;
 
       for (let i = 0; i < 20; i++) {
         const symbol = symbols[Math.floor(Math.random() * symbols.length)];
         const card = document.createElement("div");
-        card.className = "card spin";
+        card.className = "card";
+        if (!useTurbo) card.classList.add("spin");
         card.textContent = symbol;
 
         if (symbol === "SCATTER") {
@@ -185,10 +196,31 @@
         grid.appendChild(card);
       }
 
-      // Show overlay message
-      if (scatterHit) comboMessage.textContent = "BONUS!";
-      else if (wildHit) comboMessage.textContent = "WILD HIT!";
-      else if (comboCount >= 3) comboMessage.textContent = "COMBO " + comboCount + "!";
+      // Calculate win
+      if (scatterHit) win += 10;
+      if (wildHit) win += 5;
+      if (comboCount >= 3) win += comboCount * 2;
+
+      balance = balance - bet + win;
+
+      // Show overlay message (disappears after 2s)
+      if (scatterHit) {
+        comboMessage.textContent = "BONUS!";
+        setTimeout(() => comboMessage.textContent = "", 2000);
+      } else if (wildHit) {
+        comboMessage.textContent = "WILD HIT!";
+        setTimeout(() => comboMessage.textContent = "", 2000);
+      } else if (comboCount >= 3) {
+        comboMessage.textContent = "COMBO " + comboCount + "!";
+        setTimeout(() => comboMessage.textContent = "", 2000);
+      }
+
+      // Update stats
+      statsText.textContent = `Bet: ${bet} | Balance: ${balance} | Win: ${win}`;
+    }
+
+    function turboSpin() {
+      spin(true); // run spin without animation
     }
 
     spin(); // initial load
